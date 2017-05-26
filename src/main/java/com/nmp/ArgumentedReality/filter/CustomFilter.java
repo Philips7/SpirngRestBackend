@@ -14,7 +14,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +25,7 @@ import java.io.IOException;
  */
 @Configurable
 @Component("customFilter")
-public class CustomFilter extends OncePerRequestFilter {
+public class CustomFilter implements Filter {
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
@@ -41,7 +40,15 @@ public class CustomFilter extends OncePerRequestFilter {
     public void destroy() {}
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    public void init(FilterConfig filterConfig) throws ServletException {
+
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+
         if(userService==null){
             ServletContext servletContext = request.getServletContext();
             WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
@@ -51,6 +58,7 @@ public class CustomFilter extends OncePerRequestFilter {
         String authToken = request.getHeader(this.tokenHeader);
         String username = jwtTokenUtil.getUsernameFromToken(authToken);
         User user = userService.getUserByUsername(username);
+        //user.getUserRoles();
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userService.loadUserByUsername(username);
@@ -62,9 +70,10 @@ public class CustomFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
-         filterChain.doFilter(request, response);
+           filterChain.doFilter(request, response);
 
     }
+
 
 //    @Override
 //    public void doFilterInternal(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

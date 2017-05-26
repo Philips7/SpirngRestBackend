@@ -55,7 +55,7 @@ public class User implements Serializable {
     @ApiModelProperty(notes = "Client name. Min length = 8. Max length = 30", required = true)
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<UserRole> userRoles;
 

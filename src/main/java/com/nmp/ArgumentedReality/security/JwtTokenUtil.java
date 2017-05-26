@@ -27,7 +27,7 @@ public class JwtTokenUtil implements Serializable {
 
     private static final String AUDIENCE_UNKNOWN = "unknown";
 
-    @Value("${jwt.secret:uh237d79fsn478sur784}")
+    //@Value("${jwt.secret:uh237d79fsn478sur784}")
     private String secret = "ThisIsASecret";
 
     @Value("${jwt.expiration:604800}")
