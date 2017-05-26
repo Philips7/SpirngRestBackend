@@ -2,6 +2,9 @@ package com.nmp.ArgumentedReality.controller;
 
 
 import com.nmp.ArgumentedReality.entity.User;
+import com.nmp.ArgumentedReality.security.JwtAuthenticationRequest;
+import com.nmp.ArgumentedReality.security.JwtAuthenticationResponse;
+import com.nmp.ArgumentedReality.security.JwtTokenUtil;
 import com.nmp.ArgumentedReality.service.UserService;
 import com.nmp.ArgumentedReality.wrapper.Errors;
 import com.nmp.ArgumentedReality.wrapper.UsersPost;
@@ -16,6 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +39,32 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    private String tokenHeader = "Authorization";
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ResponseEntity login(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException{
+
+        final Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        authenticationRequest.getLogin(),
+                        authenticationRequest.getPassword()
+                )
+        );
+
+        final UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getLogin());
+        String token = jwtTokenUtil.generateToken(userDetails);
+        token = "Bearer " + token;
+        return ResponseEntity.ok(new JwtAuthenticationResponse(token));
+    }
+
+
 
     @ApiOperation(value = "Create new User",response = Iterable.class)
     @ApiResponses(value = {

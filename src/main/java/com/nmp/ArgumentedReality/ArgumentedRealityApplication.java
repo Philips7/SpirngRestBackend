@@ -1,10 +1,14 @@
 package com.nmp.ArgumentedReality;
 
 import com.nmp.ArgumentedReality.config.DispatcherServletInitializer;
+import com.nmp.ArgumentedReality.filter.CustomFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -17,6 +21,7 @@ import java.text.SimpleDateFormat;
 
 @SpringBootApplication
 @EnableAutoConfiguration
+@ComponentScan(basePackages = {"com.nmp.ArgumentedReality"})
 public class ArgumentedRealityApplication {
 
 	@Bean
@@ -40,6 +45,7 @@ public class ArgumentedRealityApplication {
 		b.indentOutput(true).dateFormat(new SimpleDateFormat("yyyy-MM-dd"));
 		return b;
 	}
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(new Class[]{ArgumentedRealityApplication.class,

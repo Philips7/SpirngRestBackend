@@ -1,5 +1,6 @@
 package com.nmp.ArgumentedReality.config;
 
+import com.nmp.ArgumentedReality.filter.CustomFilter;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +27,11 @@ public class DispatcherServletInitializer implements ServletContextInitializer {
                         new DelegatingFilterProxy("springSecurityFilterChain"))
                 .addMappingForUrlPatterns(null, false, "/*");
 
+        servletContext.addFilter("customFilter", new DelegatingFilterProxy("customFilter"));
+
     }
+
+
 
 }
 

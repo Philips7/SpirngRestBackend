@@ -10,8 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Dominik on 2017-04-28.
@@ -56,9 +55,9 @@ public class User implements Serializable {
     @ApiModelProperty(notes = "Client name. Min length = 8. Max length = 30", required = true)
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
     @JsonIgnore
-    private Collection<UserRole> userRoles = new ArrayList<UserRole>();
+    private List<UserRole> userRoles;
 
     public User() {
     }
@@ -124,11 +123,11 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    public Collection<UserRole> getUserRoles() {
+    public List<UserRole> getUserRoles() {
         return userRoles;
     }
 
-    public void setUserRoles(Collection<UserRole> userRoles) {
+    public void setUserRoles(List<UserRole> userRoles) {
         this.userRoles = userRoles;
     }
 

@@ -1,9 +1,8 @@
 package com.nmp.ArgumentedReality.service;
 
 
-
-
 import com.nmp.ArgumentedReality.entity.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 
@@ -23,5 +22,7 @@ public interface UserService {
     boolean updateUser(User newUser);
 
     boolean deleteUser(int id);
+
+    UserDetails loadUserByUsername(String username);
 
 }

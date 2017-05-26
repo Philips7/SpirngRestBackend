@@ -1,39 +1,38 @@
 package com.nmp.ArgumentedReality.filter;
 
-import com.nmp.ArgumentedReality.dao.daoImpl.UserDaoImpl;
 import com.nmp.ArgumentedReality.entity.User;
 import com.nmp.ArgumentedReality.security.JwtTokenUtil;
 import com.nmp.ArgumentedReality.service.Impl.UserServiceImpl;
 import com.nmp.ArgumentedReality.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Dominik on 2017-05-25.
  */
-@Component
+@Configurable
+@Component("customFilter")
 public class CustomFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
 
     @Autowired
-    UserDaoImpl userDao = new UserDaoImpl();
+    UserService userService;
 
     @Value("${jwt.header:Authorization}")
     private String tokenHeader = "Authorization";
@@ -41,21 +40,60 @@ public class CustomFilter extends OncePerRequestFilter {
     @Override
     public void destroy() {}
 
-
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        if(userService==null){
+            ServletContext servletContext = request.getServletContext();
+            WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+            userService = webApplicationContext.getBean(UserServiceImpl.class);
+        }
+
         String authToken = request.getHeader(this.tokenHeader);
         String username = jwtTokenUtil.getUsernameFromToken(authToken);
+        User user = userService.getUserByUsername(username);
 
-        logger.info("checking authentication for user " + username);
-response.addHeader("lol","dsds");
-//        List<GrantedAuthority> authorities = buildUserAuthority(mapUserRolesToRoles(user));
-//        return buildUserForAuthentication(user, authorities);
-//
-//        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-//            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.userService.loadUserByUsername(username);
 
+            if (jwtTokenUtil.validateToken(authToken, userDetails)) {
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                System.out.println("authenticated user " + username + ", setting security context");
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        }
+         filterChain.doFilter(request, response);
 
-        chain.doFilter(request,response);
     }
+
+//    @Override
+//    public void doFilterInternal(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+//        if(userService==null){
+//            ServletContext servletContext = servletRequest.getServletContext();
+//            WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+//            userService = webApplicationContext.getBean(UserServiceImpl.class);
+//        }
+//
+//        HttpServletRequest request = (HttpServletRequest) servletRequest;
+//        HttpServletResponse response = (HttpServletResponse) servletResponse;
+//        String authToken = request.getHeader(this.tokenHeader);
+//        String username = jwtTokenUtil.getUsernameFromToken(authToken);
+//        User user = userService.getUserByUsername(username);
+//        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+//            UserDetails userDetails = this.userService.loadUserByUsername(username);
+//
+//            if (jwtTokenUtil.validateToken(authToken, userDetails)) {
+//                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//                System.out.println("authenticated user " + username + ", setting security context");
+//                SecurityContextHolder.getContext().setAuthentication(authentication);
+//            }
+//        }
+//        filterChain.doFilter(request, response);
+
+//    }
+
+
+
+
 }
