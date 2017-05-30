@@ -49,7 +49,7 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 //    }
 
     @Bean
-    public CustomFilter authenticationTokenFilterBean() throws Exception{
+    public CustomFilter authenticationTokenFilterBean() throws Exception {
         return new CustomFilter();
     }
 
@@ -64,19 +64,20 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-        .exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
                 .antMatchers("/login").permitAll()
-                .antMatchers("/api/signup").permitAll()
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
                 .antMatchers(HttpMethod.GET, "/users").hasRole("USER")
 //                .antMatchers(HttpMethod.PUT,"/users").hasRole("USER")
-                .antMatchers(HttpMethod.DELETE, "/users/**").hasRole("USER");
+                .antMatchers(HttpMethod.DELETE, "/users/**").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/users/**").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/users/username/**").hasRole("USER");
 
-        http.addFilterBefore(authenticationTokenFilterBean(),UsernamePasswordAuthenticationFilter.class)
+        http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class)
                 .headers().cacheControl();
     }
 }
