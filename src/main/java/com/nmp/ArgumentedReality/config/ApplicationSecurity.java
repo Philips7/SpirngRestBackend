@@ -72,6 +72,7 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").permitAll()
                 .antMatchers("/api/signup").permitAll()
                 .antMatchers(HttpMethod.GET, "/users").hasRole("USER");
+//                .antMatchers(HttpMethod.POST, "/users").hasRole("USER");
 
         http.addFilterBefore(authenticationTokenFilterBean(),UsernamePasswordAuthenticationFilter.class)
                 .headers().cacheControl();
