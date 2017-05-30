@@ -210,7 +210,7 @@ public class UserController {
             return new ResponseEntity<List>(myErrors.getErrors(), HttpStatus.BAD_REQUEST);
         }
         try {
-            User user = new User(updatedUser.getId(), updatedUser.getUsername(), updatedUser.getPassword(), updatedUser.getEmail(), updatedUser.getName());
+            User user = new User(updatedUser.getUsername(), updatedUser.getPassword(), updatedUser.getEmail(), updatedUser.getName());
             userService.updateUser(user);
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (IllegalArgumentException ex) {
