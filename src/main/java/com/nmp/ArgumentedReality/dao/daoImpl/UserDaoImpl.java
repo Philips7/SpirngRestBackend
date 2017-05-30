@@ -76,7 +76,7 @@ public class UserDaoImpl implements UserDao {
     public void updateUser(User newUser) throws ConstraintViolationException, HibernateException {
 
         Session session = sessionFactory.getCurrentSession();
-        session.update(newUser);
+        session.saveOrUpdate(newUser);
         session.flush();
     }
 
