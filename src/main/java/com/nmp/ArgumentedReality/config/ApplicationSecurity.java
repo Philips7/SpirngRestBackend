@@ -73,10 +73,10 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/signup").permitAll()
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
                 .antMatchers(HttpMethod.GET, "/users").hasRole("USER")
-                .antMatchers(HttpMethod.GET, "users/id/*").hasRole("USER")
-                .antMatchers(HttpMethod.GET, "users/username/*").hasRole("USER")
-                .antMatchers(HttpMethod.DELETE, "users").hasRole("USER")
-                .antMatchers(HttpMethod.PUT, "users").hasRole("USER");
+                .antMatchers(HttpMethod.GET, "/users/id/*").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/users/username/*").hasRole("USER")
+                .antMatchers(HttpMethod.DELETE, "/users").hasRole("USER")
+                .antMatchers(HttpMethod.PUT, "/users").hasRole("USER");
 
         http.addFilterBefore(authenticationTokenFilterBean(),UsernamePasswordAuthenticationFilter.class)
                 .headers().cacheControl();
