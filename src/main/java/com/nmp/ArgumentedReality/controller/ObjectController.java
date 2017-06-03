@@ -27,7 +27,7 @@ import java.nio.file.Paths;
  * Created by Dominik on 2017-05-18.
  */
 
-@Api(value="Argumented Reality", description="Operations pertaining to object in AR application")
+@Api(value = "Argumented Reality", description = "Operations pertaining to object in AR application")
 @RestController
 public class ObjectController {
 
@@ -39,10 +39,10 @@ public class ObjectController {
     @RequestMapping(value = "/object", method = RequestMethod.POST)
     public ResponseEntity<?> uploadFile(
             @RequestParam(value = "file") MultipartFile file,
-            @RequestParam(value = "description")String description,
+            @RequestParam(value = "description") String description,
             HttpServletRequest request) {
 
-        Object object = new Object(description,file);
+        Object object = new Object(description, file);
         objectService.createObject(object);
         Object newObject = objectService.getObjectByDescription(description);
 
@@ -64,9 +64,9 @@ public class ObjectController {
 
     @RequestMapping(value = "/object", method = RequestMethod.GET)
     ResponseEntity<?> getObject(HttpServletRequest request,
-                                HttpServletResponse response, @RequestParam("id") int id) throws Exception{
+                                HttpServletResponse response, @RequestParam("id") int id) throws Exception {
 
-       // String rootDirectory = request.getSession().getServletContext().getRealPath("/" + id + ".txt");
+        // String rootDirectory = request.getSession().getServletContext().getRealPath("/" + id + ".txt");
 
         //File file = new File(rootDirectory);
         ClassPathResource classPathResource = new ClassPathResource("TaylorSwift.mp4");
@@ -79,18 +79,15 @@ public class ObjectController {
             IOUtils.closeQuietly(inputStream);
         }
 
-        if(file.exists() == false){
+        if (file.exists() == false) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         } else {
-       // FileSystemResource systemResource = new FileSystemResource(file);
+            // FileSystemResource systemResource = new FileSystemResource(file);
             long length = file.length();
 
-            if (length <= Integer.MAX_VALUE)
-            {
-                response.setContentLength((int)length);
-            }
-            else
-            {
+            if (length <= Integer.MAX_VALUE) {
+                response.setContentLength((int) length);
+            } else {
                 response.addHeader("Content-Length", Long.toString(length));
             }
             InputStream is = new FileInputStream(file);
