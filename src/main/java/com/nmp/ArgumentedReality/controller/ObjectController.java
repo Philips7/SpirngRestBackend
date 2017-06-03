@@ -69,9 +69,9 @@ public class ObjectController {
        // String rootDirectory = request.getSession().getServletContext().getRealPath("/" + id + ".txt");
 
         //File file = new File(rootDirectory);
-        ClassPathResource classPathResource = new ClassPathResource("");
+        ClassPathResource classPathResource = new ClassPathResource("TaylorSwift.mp4");
 
-        InputStream inputStream = ClassLoader.class.getResourceAsStream("/TaylorSwift.mp4");
+        InputStream inputStream = classPathResource.getInputStream();
         File file = File.createTempFile("TaylorSwift", ".mp4");
         try {
             FileUtils.copyInputStreamToFile(inputStream, file);
