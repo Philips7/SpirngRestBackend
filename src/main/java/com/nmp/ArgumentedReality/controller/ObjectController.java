@@ -4,6 +4,7 @@ import com.nmp.ArgumentedReality.entity.Object;
 import com.nmp.ArgumentedReality.service.ObjectService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,8 +63,9 @@ public class ObjectController {
     ResponseEntity<?> getObject(HttpServletRequest request,
                                 HttpServletResponse response, @RequestParam("id") int id) throws Exception{
 
-        String rootDirectory = request.getSession().getServletContext().getRealPath("/" + id + ".txt");
-        File file = new File(rootDirectory);
+       // String rootDirectory = request.getSession().getServletContext().getRealPath("/" + id + ".txt");
+        File file = new ClassPathResource("TaylorSwift.mp4").getFile();
+        //File file = new File(rootDirectory);
         if(file.exists() == false){
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         } else {
