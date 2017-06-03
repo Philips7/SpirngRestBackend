@@ -3,6 +3,8 @@ package com.nmp.ArgumentedReality.controller;
 import com.nmp.ArgumentedReality.entity.Object;
 import com.nmp.ArgumentedReality.service.ObjectService;
 import io.swagger.annotations.Api;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
@@ -65,8 +67,18 @@ public class ObjectController {
                                 HttpServletResponse response, @RequestParam("id") int id) throws Exception{
 
        // String rootDirectory = request.getSession().getServletContext().getRealPath("/" + id + ".txt");
-        File file = new ClassPathResource("TaylorSwift.mp4").getFile();
+
         //File file = new File(rootDirectory);
+        ClassPathResource classPathResource = new ClassPathResource("");
+
+        InputStream inputStream = classPathResource.getInputStream();
+        File file = File.createTempFile("TaylorSwift", ".mp4");
+        try {
+            FileUtils.copyInputStreamToFile(inputStream, file);
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+        }
+
         if(file.exists() == false){
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         } else {
