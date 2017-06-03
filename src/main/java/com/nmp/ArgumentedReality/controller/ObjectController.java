@@ -5,7 +5,6 @@ import com.nmp.ArgumentedReality.service.ObjectService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -69,8 +70,11 @@ public class ObjectController {
         if(file.exists() == false){
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         } else {
-        FileSystemResource systemResource = new FileSystemResource(file);
-        return new ResponseEntity<>(systemResource, HttpStatus.OK);
+       // FileSystemResource systemResource = new FileSystemResource(file);
+            InputStream is = new FileInputStream(file);
+            org.apache.commons.io.IOUtils.copy(is, response.getOutputStream());
+            response.flushBuffer();
+            return new ResponseEntity(HttpStatus.OK);
         }
     }
 }
