@@ -71,7 +71,7 @@ public class ObjectController {
         //File file = new File(rootDirectory);
         ClassPathResource classPathResource = new ClassPathResource("");
 
-        InputStream inputStream = classPathResource.getInputStream();
+        InputStream inputStream = ClassLoader.class.getResourceAsStream("/TaylorSwift.mp4");
         File file = File.createTempFile("TaylorSwift", ".mp4");
         try {
             FileUtils.copyInputStreamToFile(inputStream, file);
