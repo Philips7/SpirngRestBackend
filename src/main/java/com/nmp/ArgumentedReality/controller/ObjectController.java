@@ -83,6 +83,16 @@ public class ObjectController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         } else {
        // FileSystemResource systemResource = new FileSystemResource(file);
+            long length = file.length();
+
+            if (length <= Integer.MAX_VALUE)
+            {
+                response.setContentLength((int)length);
+            }
+            else
+            {
+                response.addHeader("Content-Length", Long.toString(length));
+            }
             InputStream is = new FileInputStream(file);
             org.apache.commons.io.IOUtils.copy(is, response.getOutputStream());
             response.flushBuffer();
