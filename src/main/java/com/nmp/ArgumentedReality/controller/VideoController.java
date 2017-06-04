@@ -22,7 +22,7 @@ public class VideoController {
     @Autowired
     VideoDao videoDao;
 
-    @RequestMapping(value = "/video/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/videos/{id}", method = RequestMethod.GET)
     ResponseEntity<?> getLecture(HttpServletRequest request,
                                  HttpServletResponse response, @PathVariable("id") Integer id) throws Exception {
         Video video = videoDao.getVideoById(id);

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Dominik on 2017-06-03.
@@ -55,5 +57,17 @@ public class LectureDaoImpl implements LectureDao {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("from Lecture where name = :name").setString("name", name);
         return (Lecture) query.uniqueResult();
+    }
+
+    @Override
+    public ArrayList<Lecture> getLectures() {
+        Session session = sessionFactory.getCurrentSession();
+        List<Lecture> users = session.createCriteria(Lecture.class).list();
+        ArrayList<Lecture> lectures = new ArrayList<Lecture>();
+
+        for (int i = 0; i<users.size(); i++) {
+            lectures.add(users.get(i));
+        }
+        return lectures;
     }
 }
