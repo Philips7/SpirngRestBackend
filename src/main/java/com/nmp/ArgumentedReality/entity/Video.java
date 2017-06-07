@@ -28,15 +28,27 @@ public class Video implements Serializable {
     @JoinColumn(name = "lectureId")
     private Lecture lecture;
 
+    @Column(name = "lectureId", insertable = false, updatable = false)
+    private Integer lectureId;
+
     public Video() {
     }
 
-    public Video(Integer videoId, String filename, String description, String extension, Lecture lecture) {
+    public Video(Integer videoId, String filename, String description, String extension, Lecture lecture, Integer lectureId) {
         this.videoId = videoId;
         this.filename = filename;
         this.description = description;
         this.extension = extension;
         this.lecture = lecture;
+        this.lectureId = lectureId;
+    }
+
+    public Integer getLectureId() {
+        return lectureId;
+    }
+
+    public void setLectureId(Integer lectureId) {
+        this.lectureId = lectureId;
     }
 
     public Integer getVideoId() {
