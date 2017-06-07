@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Dominik on 2017-06-03.
@@ -56,5 +58,17 @@ public class VideoDaoImpl implements VideoDao {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("from Video where name = :name").setString("name", name);
         return (Video) query.uniqueResult();
+    }
+
+    @Override
+    public ArrayList<Video> getVideos() {
+        Session session = sessionFactory.getCurrentSession();
+        List<Video> videos = session.createCriteria(Video.class).list();
+        ArrayList<Video> videoArrayList = new ArrayList<Video>();
+
+        for (int i = 0; i<videos.size(); i++) {
+            videoArrayList.add(videos.get(i));
+        }
+        return videoArrayList;
     }
 }

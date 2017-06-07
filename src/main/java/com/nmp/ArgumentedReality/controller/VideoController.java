@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 
 /**
  * Created by Dominik on 2017-06-03.
@@ -28,6 +29,18 @@ public class VideoController {
         Video video = videoDao.getVideoById(id);
         if (video != null){
             return new ResponseEntity<Video>(video,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @RequestMapping(value = "/videos", method = RequestMethod.GET)
+    ResponseEntity<?> getLectures(HttpServletRequest request,
+                                 HttpServletResponse response) throws Exception {
+        ArrayList<Video> videos = videoDao.getVideos();
+        if (videos != null){
+            return new ResponseEntity<ArrayList<Video>>(videos,HttpStatus.OK);
         } else {
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
         }
