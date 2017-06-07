@@ -1,5 +1,7 @@
 package com.nmp.ArgumentedReality.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -25,6 +27,7 @@ public class Video implements Serializable {
     private String extension;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "lectureId")
     private Lecture lecture;
 
