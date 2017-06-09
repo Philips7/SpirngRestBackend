@@ -59,7 +59,7 @@ public class VideoController {
         Video video = videoDao.getVideoById(id);
         Integer lecture_id = video.getLectureId();
 
-        ClassPathResource classPathResource = new ClassPathResource("videos/video/" + lecture_id + "_" + id + ".mp4");
+        ClassPathResource classPathResource = new ClassPathResource("videos/video" + lecture_id + "_" + id + ".mp4");
 
         InputStream inputStream = classPathResource.getInputStream();
         File file = File.createTempFile( "video"+id, ".mp4");
