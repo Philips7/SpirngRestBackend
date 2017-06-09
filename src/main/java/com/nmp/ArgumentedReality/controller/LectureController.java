@@ -51,7 +51,7 @@ public class LectureController {
         }
     }
 
-    @RequestMapping(value = "/lectures/{lectureId}/image/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/lectures/file/{id}", method = RequestMethod.GET)
     ResponseEntity<?> getLectureImage(HttpServletRequest request,
                                 HttpServletResponse response, @PathVariable("id") int id) throws Exception {
 
