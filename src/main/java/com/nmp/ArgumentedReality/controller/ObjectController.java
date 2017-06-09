@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,17 +59,15 @@ public class ObjectController {
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/object", method = RequestMethod.GET)
+    @RequestMapping(value = "/object/{id}", method = RequestMethod.GET)
     ResponseEntity<?> getObject(HttpServletRequest request,
-                                HttpServletResponse response, @RequestParam("id") int id) throws Exception {
+                                HttpServletResponse response, @PathVariable("id") int id) throws Exception {
 
-        // String rootDirectory = request.getSession().getServletContext().getRealPath("/" + id + ".txt");
+        ClassPathResource classPathResource = new ClassPathResource("videos/video" + id + ".mp4");
 
-        //File file = new File(rootDirectory);
-        ClassPathResource classPathResource = new ClassPathResource("TaylorSwift.mp4");
 
         InputStream inputStream = classPathResource.getInputStream();
-        File file = File.createTempFile("TaylorSwift", ".mp4");
+        File file = File.createTempFile( "video"+id, ".mp4");
         try {
             FileUtils.copyInputStreamToFile(inputStream, file);
         } finally {
