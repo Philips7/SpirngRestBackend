@@ -1,9 +1,12 @@
 package com.nmp.ArgumentedReality.entity;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -20,9 +23,11 @@ public class Item implements Serializable{
     private Integer itemId;
 
     @Column(name = "name")
+    @NotBlank
     private String name;
 
     @Column(name = "markerNumber")
+    @NotNull
     private Integer markerNumber;
 
     public Item() {
