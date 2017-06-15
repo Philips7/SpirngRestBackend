@@ -28,6 +28,11 @@ public class Item implements Serializable{
     public Item() {
     }
 
+    public Item(String name, Integer markerNumber) {
+        this.name = name;
+        this.markerNumber = markerNumber;
+    }
+
     public Item(Integer itemId, String name, Integer markerNumber) {
         this.itemId = itemId;
         this.name = name;
