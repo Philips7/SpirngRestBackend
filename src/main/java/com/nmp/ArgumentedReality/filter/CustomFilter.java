@@ -54,9 +54,14 @@ public class CustomFilter implements Filter {
             WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
             userService = webApplicationContext.getBean(UserServiceImpl.class);
         }
+        String authToken = null;
+        try {
+            authToken = request.getHeader(this.tokenHeader);
+            authToken = authToken.replace("Bearer ", "");
 
-        String authToken = request.getHeader(this.tokenHeader);
-        authToken = authToken.replace("Bearer ", "");
+        } catch (Exception ex) {
+
+        }
         String username = jwtTokenUtil.getUsernameFromToken(authToken);
         User user = userService.getUserByUsername(username);
         //user.getUserRoles();
