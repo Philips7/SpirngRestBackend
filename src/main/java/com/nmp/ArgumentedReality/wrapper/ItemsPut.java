@@ -9,9 +9,12 @@ import java.io.Serializable;
 /**
  * Created by Dominik on 2017-06-15.
  */
-public class ItemsPost implements Serializable {
+public class ItemsPut implements Serializable {
 
-    private static final long serialVersionUID = 87429616345879812L;
+
+    private static final long serialVersionUID = -6179225782273418299L;
+    @NotNull(message = "can not be blank")
+    private Integer itemId;
 
     @NotBlank(message = "can not be blank")
     @Size(min = 1, max = 30, message = "Min size: 8, Max size:30")
@@ -23,14 +26,22 @@ public class ItemsPost implements Serializable {
     @NotBlank(message = "can not be blank")
     private String model;
 
-    public ItemsPost() {
+    public ItemsPut() {
     }
 
-
-    public ItemsPost(String name, Integer markerNumber, String model) {
+    public ItemsPut(Integer itemId, String name, Integer markerNumber, String model) {
+        this.itemId = itemId;
         this.name = name;
         this.markerNumber = markerNumber;
         this.model = model;
+    }
+
+    public Integer getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(Integer itemId) {
+        this.itemId = itemId;
     }
 
     public String getName() {

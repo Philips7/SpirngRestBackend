@@ -4,6 +4,7 @@ import com.nmp.ArgumentedReality.entity.Item;
 import com.nmp.ArgumentedReality.service.ItemService;
 import com.nmp.ArgumentedReality.wrapper.Errors;
 import com.nmp.ArgumentedReality.wrapper.ItemsPost;
+import com.nmp.ArgumentedReality.wrapper.ItemsPut;
 import com.sun.org.apache.xalan.internal.xsltc.runtime.InternalRuntimeError;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +86,7 @@ public class ItemController {
     }
 
     @RequestMapping(value = "/items", method = RequestMethod.POST)
-    public ResponseEntity<?> createitem(@Valid @RequestBody ItemsPost newItem, BindingResult result) {
+    public ResponseEntity<?> createItem(@Valid @RequestBody ItemsPost newItem, BindingResult result) {
 
         if (result.hasErrors()) {
             System.out.println(result.toString());
@@ -99,7 +100,7 @@ public class ItemController {
         }
 
         try {
-            Item item = new Item(newItem.getName(), newItem.getMarkerNumber());
+            Item item = new Item(newItem.getName(), newItem.getMarkerNumber(), newItem.getModel());
             itemService.createItem(item);
             return new ResponseEntity(HttpStatus.CREATED);
         } catch (IllegalArgumentException ex) {
@@ -114,4 +115,37 @@ public class ItemController {
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
     }
+
+    @RequestMapping(value = "/items", method = RequestMethod.PUT, headers = "Accept=application/json" )
+    public ResponseEntity<?> updateItem(@Valid @RequestBody ItemsPut newItem, BindingResult result) {
+
+        if (result.hasErrors()) {
+            System.out.println(result.toString());
+            List<FieldError> errorsS = result.getFieldErrors();
+            JSONObject response = new JSONObject();
+
+            Errors myErrors = new Errors(errorsS);
+            myErrors.setAllErrors();
+
+            return new ResponseEntity<List>(myErrors.getErrors(), HttpStatus.BAD_REQUEST);
+        }
+        try {
+            Item item = new Item(newItem.getItemId(), newItem.getName(), newItem.getMarkerNumber(), newItem.getModel());
+            itemService.updateItem(item);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex.getMessage());
+            JSONObject response = new JSONObject();
+            response.put("code", HttpStatus.BAD_REQUEST);
+            response.put("message", ex.getMessage());
+            return new ResponseEntity<JSONObject>(response, HttpStatus.BAD_REQUEST);
+        } catch (InternalRuntimeError ex) {
+            System.out.println(ex.getMessage());
+            JSONObject response = new JSONObject();
+            response.put("code", HttpStatus.INTERNAL_SERVER_ERROR);
+            response.put("message", ex.getMessage());
+            return new ResponseEntity<JSONObject>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

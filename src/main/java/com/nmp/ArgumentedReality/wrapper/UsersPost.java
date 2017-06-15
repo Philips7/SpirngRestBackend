@@ -29,6 +29,7 @@ public class UsersPost implements Serializable{
     @NotBlank(message = "can not be blank")
     private String email;
 
+
     public UsersPost() {
     }
 

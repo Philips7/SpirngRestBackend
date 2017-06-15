@@ -30,22 +30,36 @@ public class Item implements Serializable{
     @NotNull
     private Integer markerNumber;
 
+    @Column(name = "model")
+    @NotBlank
+    private String model;
+
     public Item() {
     }
 
-    public Item(String name, Integer markerNumber) {
+    public Item(String name, Integer markerNumber, String model) {
         this.name = name;
         this.markerNumber = markerNumber;
+        this.model = model;
     }
 
-    public Item(Integer itemId, String name, Integer markerNumber) {
+    public Item(Integer itemId, String name, Integer markerNumber, String model) {
         this.itemId = itemId;
         this.name = name;
         this.markerNumber = markerNumber;
+        this.model = model;
     }
 
     public Integer getItemId() {
         return itemId;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public void setItemId(Integer itemId) {
