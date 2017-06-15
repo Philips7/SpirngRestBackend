@@ -56,6 +56,7 @@ public class CustomFilter implements Filter {
         }
 
         String authToken = request.getHeader(this.tokenHeader);
+        authToken = authToken.replace("Bearer ", "");
         String username = jwtTokenUtil.getUsernameFromToken(authToken);
         User user = userService.getUserByUsername(username);
         //user.getUserRoles();
