@@ -32,10 +32,10 @@ public class UserDaoImpl implements UserDao {
         Session session = sessionFactory.getCurrentSession();
 
         UserRole userRole1 = new UserRole(newUser.getUsername(), "ROLE_USER");
-//        UserRole userRole2 = new UserRole(newUser.getUsername(), "ROLE_ADMIN");
+        UserRole userRole2 = new UserRole(newUser.getUsername(), "ROLE_ADMIN");
         List<UserRole> newRoles = new ArrayList<UserRole>();
         newRoles.add(userRole1);
-//        newRoles.add(userRole2); TODO REMOVE ROLE-ADMIN
+        newRoles.add(userRole2);
         newUser.setUserRoles(newRoles);
         for (UserRole role : newRoles) {
             role.setUser(newUser);
